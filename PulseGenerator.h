@@ -73,13 +73,13 @@ public:
 	void generatePulseAsync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void generatePulseSync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void setSysFreq(uint32_t sysFreq){freq=sysFreq;}
-	static void irqHandler(void);
+	volatile static  void irqHandler(void);
 	~PulseGenerator();
 private:
 	//******************************************************************************************
 	//Private variables
 	//******************************************************************************************
-	static bool isBusy;
+	volatile static  bool isBusy;
 	static GPIO_TypeDef *currentPort;
 	static uint16_t currentPin;
 	static bool Currentpolarity;
@@ -102,7 +102,7 @@ private:
 //Template definitions of static variables
 //******************************************************************************************
 template <PulseGeneratorTimers_t TIM>
-bool PulseGenerator<TIM>::isBusy=0;
+volatile bool PulseGenerator<TIM>::isBusy=0;
 
 template <PulseGeneratorTimers_t TIM>
 bool PulseGenerator<TIM>::isInited=0;
@@ -171,7 +171,7 @@ bool PulseGenerator<TIM>::tryGeneratePulse(GPIO_TypeDef *Port,uint16_t  Pin, int
 }
 
 template <PulseGeneratorTimers_t TIM>
- void PulseGenerator<TIM>::irqHandler()
+volatile void PulseGenerator<TIM>::irqHandler()
 {
 	getTimBase()->SR&=~TIM_FLAG_UPDATE;
 	getTimBase()->CR1&=~TIM_CR1_CEN;
@@ -254,7 +254,7 @@ template <PulseGeneratorTimers_t TIM>
 	}
 	HAL_NVIC_SetPriority(IrqNumber, 0xF, 0);
 	HAL_NVIC_EnableIRQ (IrqNumber);
-	InterruptManager::AddHandler(irqHandler, IrqNumber);
+	InterruptManager::AddHandler(pHandlerPointer_t(irqHandler), IrqNumber);
 }
 
 
