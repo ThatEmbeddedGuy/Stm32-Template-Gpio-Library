@@ -24,7 +24,6 @@
 #define PULSEGENERATOR_H_
 #include <atomic>
 #include "cmsis_device.h"
-#include "Gpio.h"
 #include "interruptmanager.h"
 
 
