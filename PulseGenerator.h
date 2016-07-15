@@ -88,7 +88,6 @@ private:
 	static bool isInited;
 	static uint32_t freq;
 	bool polarity;
-
 	//******************************************************************************************
 	//Private functions
 	//******************************************************************************************
@@ -96,6 +95,7 @@ private:
 	static inline  void setPinDown(void){currentPort->BSRR=1<<(currentPin+16);}
 	static inline  void setPinState(bool state) {state  ? setPinUp() : setPinDown(); }
 	static void initInterrupt(void);
+	static void initTimer(void);
 	void enableTimer(void);
 	static void timCLockEnable(void) ;
 	static constexpr TIM_TypeDef * getTimBase(void);
@@ -132,17 +132,44 @@ void PulseGenerator<TIM>::init()
 	{
 
 		timCLockEnable();
-		TIM_Base_InitTypeDef TimInitStruct;
-		TimInitStruct.ClockDivision=TIM_CLOCKDIVISION_DIV1;
-		TimInitStruct.CounterMode=TIM_COUNTERMODE_UP;
-		TimInitStruct.Period=1;
-		TimInitStruct.Prescaler=freq/2000000;
-		TimInitStruct.RepetitionCounter=0;
-		TIM_Base_SetConfig(getTimBase(),&TimInitStruct);
+		initTimer();
 		initInterrupt();
 		isInited=true;
 	}
 }
+
+template <PulseGeneratorTimers_t TIM>
+void PulseGenerator<TIM>::initTimer()
+{
+	constexpr uint32_t RepetitionCounter = 0;
+	constexpr uint32_t Period = 1;
+	constexpr uint32_t ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	constexpr uint32_t CounterMode = TIM_COUNTERMODE_UP;
+	const uint32_t Prescaler=freq/2000000;
+
+	uint32_t tmpcr1 = 0;
+	tmpcr1 = getTimBase()->CR1;
+
+	if(IS_TIM_CC3_INSTANCE(getTimBase()) != RESET)
+	{
+		tmpcr1 &= ~(TIM_CR1_DIR | TIM_CR1_CMS);
+		tmpcr1 |= CounterMode;
+	}
+	if(IS_TIM_CC1_INSTANCE(getTimBase()) != RESET)
+	{
+		tmpcr1 &= ~TIM_CR1_CKD;
+		tmpcr1 |= ClockDivision;
+	}
+	getTimBase()->CR1 = tmpcr1;
+	getTimBase()->ARR = Period ;
+	getTimBase()->PSC = Prescaler;
+	if(IS_TIM_ADVANCED_INSTANCE(getTimBase()) != RESET)
+	{
+		getTimBase()->RCR = RepetitionCounter;
+	}
+	getTimBase()->EGR = TIM_EGR_UG;
+}
+
 
 template <PulseGeneratorTimers_t TIM>
 void PulseGenerator<TIM>::generatePulseAsync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs){while (tryGeneratePulse(Port,Pin,widthMs));}
