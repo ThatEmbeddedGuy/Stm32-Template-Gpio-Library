@@ -15,9 +15,11 @@ class Led
 
 public:
 	Led(){};
-	void Init() 	{mLed::Init();}
-	void SetState(bool state) {mLed::SetState();};
-	void Toggle(bool state)  {mLed::Toggle();}
+	static void Init() 	{mLed::Init();}
+	static void SetState(bool state) {mLed::SetState(state);};
+	static void Toggle(bool state)  {mLed::Toggle();}
+	static void SetUp(void) {mLed::SetState(true);};
+	static void SetDown(void) {mLed::SetState(false);};
 private:
 	typedef Gpio<port,pin,GpioMode_Out,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_PullUp> mLed;
 

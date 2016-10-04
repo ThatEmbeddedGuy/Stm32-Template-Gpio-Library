@@ -10,6 +10,7 @@
 
 #include "stm32f4xx.h"
 #include<stdint.h>
+#include "string.h"
 //Add another vecotrs implimentaton if you use another mcu
 #if defined(STM32F407xx)
 #include "vectorsf407.h"

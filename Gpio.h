@@ -136,7 +136,9 @@ enum GpioAf_t
 
 
 
-
+//Пример использования
+//typedef Gpio<PortE,7,GpioMode_Out,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_NoPull> led1;
+//led1::Init;
 
 template<GpioPort_t port,
 		 uint8_t pin,
@@ -147,8 +149,8 @@ template<GpioPort_t port,
 
 class Gpio {
 public:
-	Gpio();
-	 static void Init()
+	Gpio(){};
+	inline static void Init()
 	{
 		RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN|RCC_AHB1ENR_GPIOBEN|RCC_AHB1ENR_GPIOCEN|RCC_AHB1ENR_GPIODEN|RCC_AHB1ENR_GPIOEEN;
 
@@ -158,7 +160,6 @@ public:
 		GetPortBase()->PUPDR|=   GpioPuPd<<pin*2;
 
 	}
-
 	inline static void DeInit(){};
 	inline static void SetAf(GpioAf_t af){
 
@@ -169,20 +170,19 @@ public:
 
         GetPortBase()->AFR[AfrIdx] &= AfMask;
         GetPortBase()->AFR[AfrIdx] |= AfValue;
-
-
  };
+
 	inline static void SetState(bool state) {state  ? SetUp() : SetDown()  ;  }
 	inline static void SetUp(void) {GetPortBase()->BSRR=1<<pin;};
 	inline static void SetDown(void){GetPortBase()->BSRR=1<<(pin+16);}
 	inline static bool GetState(void) {return GetPortBase()->IDR&1<<pin;};
 	inline static void Toggle(void) {SetState(!GetState());};
-
 	virtual ~Gpio();
-
-private:
 	static constexpr GPIO_TypeDef* GetPortBase(void)	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(port))); };
+	static constexpr uint16_t GetPin(void) {return  pin;  };
 	static constexpr bool IsNotExti(void) {return  !(mode==GpioMode_Exti);  };
+private:
+
 };
 
 

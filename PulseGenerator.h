@@ -74,8 +74,9 @@ public:
 	void generatePulseAsync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void generatePulseSync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void setSysFreq(uint32_t sysFreq){freq=sysFreq;}
+	void setPolarity(bool pol){polarity=pol;}
 	volatile static  void irqHandler(void);
-	~PulseGenerator();
+	virtual ~PulseGenerator(){};
 private:
 	//******************************************************************************************
 	//Private variables
@@ -280,9 +281,12 @@ void PulseGenerator<TIM>::initInterrupt()
 	case(PulseGeneratorTimers::Tim13):{irqNumber=TIM8_UP_TIM13_IRQn;break;		}
 	case(PulseGeneratorTimers::Tim14):{irqNumber=TIM8_TRG_COM_TIM14_IRQn;break;	}
 	}
+
+	INTERRUPTMANAGER::addHandler(pHandlerPointer_t(irqHandler), irqNumber);
+
 	NVIC_SetPriority(irqNumber, DEFAULT_TIM_NVIC_PRIORITY);
 	NVIC_EnableIRQ (irqNumber);
-	InterruptManager::AddHandler(pHandlerPointer_t(irqHandler), irqNumber);
+
 }
 
 
