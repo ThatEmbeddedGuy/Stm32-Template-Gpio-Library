@@ -9,19 +9,19 @@
 #define LED_H_
 
 
-template<GpioPort_t port, uint8_t pin>
+template<Port port, uint8_t pin>
 class Led
 {
 
 public:
 	Led(){};
-	static void Init() 	{mLed::Init();}
-	static void SetState(bool state) {mLed::SetState(state);};
-	static void Toggle(bool state)  {mLed::Toggle();}
-	static void SetUp(void) {mLed::SetState(true);};
-	static void SetDown(void) {mLed::SetState(false);};
+	static void init() 	{mLed::init();}
+	static void setState(bool state) {mLed::setState(state);};
+	static void toggle(bool state)  {mLed::toggle();}
+	static void setUp(void) {mLed::setState(true);};
+	static void setDown(void) {mLed::setState(false);};
 private:
-	typedef Gpio<port,pin,GpioMode_Out,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_PullUp> mLed;
+	typedef static_Gpio<port,pin,GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullUp> mLed;
 
 };
 
