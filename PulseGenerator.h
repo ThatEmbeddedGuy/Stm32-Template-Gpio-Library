@@ -125,6 +125,16 @@ uint32_t PulseGenerator<TIM>::freq=DEFAULT_SYS_FREQ;
 //******************************************************************************************
 //Template definitions of public functions
 //******************************************************************************************
+
+#ifndef TIM_CLOCKDIVISION_DIV1
+#define TIM_CLOCKDIVISION_DIV1 0
+#endif
+
+#ifndef TIM_COUNTERMODE_UP
+#define TIM_COUNTERMODE_UP 0
+#endif
+
+
 template <PulseGeneratorTimers TIM>
 void PulseGenerator<TIM>::init()
 {
@@ -202,7 +212,7 @@ bool PulseGenerator<TIM>::tryGeneratePulse(GPIO_TypeDef *Port,uint16_t  Pin, int
 template <PulseGeneratorTimers TIM>
 volatile void PulseGenerator<TIM>::irqHandler()
 {
-	getTimBase()->SR&=~TIM_FLAG_UPDATE;
+	getTimBase()->SR&=~TIM_SR_UIF;
 	getTimBase()->CR1&=~TIM_CR1_CEN;
 	setPinState(currentPolarity);
 	isBusy=0;
