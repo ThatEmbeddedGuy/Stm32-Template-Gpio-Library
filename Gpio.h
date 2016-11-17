@@ -14,25 +14,25 @@
 
 enum class Port: unsigned char {
 	A=0,
-			B,
-			C,
-			D,
-			E,
-			F
+	B,
+	C,
+	D,
+	E,
+	F
 };
 
 enum class GpioMode {
 	In = 0x00,
-			Out = 0x01,
-			AlternateFunction = 0x02,
-			Analog = 0x03,
-			Exti=0xFF
+	Out = 0x01,
+	AlternateFunction = 0x02,
+	Analog = 0x03,
+	Exti=0xFF
 
 };
 
 enum class GpioOutType {
 	PP = 0x00,
-			OD = 0x01
+	OD = 0x01
 };
 
 enum class GpioSpeed {
@@ -147,8 +147,6 @@ public:
 		mPort->OTYPER|=  (uint8_t)GpioOutType<<mPin;
 		mPort->PUPDR|=   (uint8_t)GpioPuPd<<mPin*2;
 	}
-
-	inline  void seInit(){};
 	inline  void setAf(GpioAf af){
 		const uint32_t MskOft   = (uint32_t)(mPin & (uint32_t)0x07) * 4;
 		const uint32_t AfMask   = ~((uint32_t)0xf << MskOft) ;
