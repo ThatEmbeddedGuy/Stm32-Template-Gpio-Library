@@ -11,176 +11,238 @@
 #include <stdio.h>
 #include "stm32f4xx.h"
 
-//------------------------------------------
-// Template class for gpio ports in stm32
-// use case
-//typedef Gpio<PortE,7,GpioMode_Out,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_NoPull> led1;
-//
-//led1::Init;
-//led1::SetState(true);
-//led::Toggle();
-//------------------------------------------
 
-enum GpioPort_t {
-	PortA,
-	PortB,
-	PortC,
-	PortD,
-	PortE,
-	PortF
+enum class Port: unsigned char {
+	A=0,
+			B,
+			C,
+			D,
+			E,
+			F
 };
 
-enum GpioMode_t {
-	GpioMode_In = 0x00,
-	GpioMode_Out = 0x01,
-	GpioMode_AlternateFunction = 0x02,
-	GpioMode_Analog = 0x03,
-	GpioMode_Exti=0xFF
+enum class GpioMode {
+	In = 0x00,
+			Out = 0x01,
+			AlternateFunction = 0x02,
+			Analog = 0x03,
+			Exti=0xFF
 
 };
 
-enum GpioOutType_t {
-	GpioOutType_PP = 0x00,
-	GpioOutType_OD = 0x01
+enum class GpioOutType {
+	PP = 0x00,
+			OD = 0x01
 };
 
-enum GpioSpeed_t {
-	GpioSpeed_2MHz = 0x00,
-	GpioSpeed_25MHz = 0x01,
-	GpioSpeed_50MHz = 0x02,
-	GpioSpeed_100MHz = 0x03
+enum class GpioSpeed {
+	s2MHz = 0x00,
+	s25MHz = 0x01,
+	s50MHz = 0x02,
+	s100MHz = 0x03
 };
 
-enum GpioPuPd_t {
-	GpioPuPd_NoPull = 0x00,
-	GpioPuPd_PullUp = 0x01,
-	GpioPuPd_PullDown = 0x02
+enum class GpioPuPd {
+	NoPull = 0x00,
+	PullUp = 0x01,
+	PullDown = 0x02
 };
 
 
-enum GpioAf_t
+enum class GpioAf
 {
-    GpioAf_0             =0x00,
-    GpioAf_RTC_50Hz      =GpioAf_0,  /*  RTC_50Hz Alternate Function mapping */
-    GpioAf_MCO           =GpioAf_0,  /*  MCO (MCO1 and MCO2) Alternate Function mapping */
-    GpioAf_TAMPER        =GpioAf_0,  /*  TAMPER (TAMPER_1 and TAMPER_2) Alternate Function mapping */
-    GpioAf_SWJ           =GpioAf_0,  /*  SWJ (SWD and JTAG) Alternate Function mapping */
-    GpioAf_TRACE         =GpioAf_0,  /*  TRACE Alternate Function mapping */
+	Af0           =0x00,
+	rtc50Hz       =Af0,  /*  RTC_50Hz Alternate Function mapping */
+	mco           =Af0,  /*  MCO (MCO1 and MCO2) Alternate Function mapping */
+	tamper        =Af0,  /*  TAMPER (TAMPER_1 and TAMPER_2) Alternate Function mapping */
+	swj           =Af0,  /*  SWJ (SWD and JTAG) Alternate Function mapping */
+	trace         =Af0,  /*  TRACE Alternate Function mapping */
 
-    GpioAf_1             =0x01,
-    GpioAf_TIM1          =GpioAf_1,  /*  TIM1 Alternate Function mapping */
-    GpioAf_TIM2          =GpioAf_1,  /*  TIM2 Alternate Function mapping */
+	Af1            =0x01,
+	tim1          =Af1,  /*  TIM1 Alternate Function mapping */
+	tim2          =Af1,  /*  TIM2 Alternate Function mapping */
 
-    GpioAf_2             =0x02,
-    GpioAf_TIM3          =GpioAf_2,  /*  TIM3 Alternate Function mapping */
-    GpioAf_TIM4          =GpioAf_2,  /*  TIM4 Alternate Function mapping */
-    GpioAf_TIM5          =GpioAf_2,  /*  TIM5 Alternate Function mapping */
+	Af2            =0x02,
+	tim3          =Af2,  /*  TIM3 Alternate Function mapping */
+	tim4          =Af2,  /*  TIM4 Alternate Function mapping */
+	tim5          =Af2,  /*  TIM5 Alternate Function mapping */
 
-    GpioAf_3             =0x03,
-    GpioAf_TIM8          =GpioAf_3,  /*  TIM8 Alternate Function mapping */
-    GpioAf_TIM9          =GpioAf_3,  /*  TIM9 Alternate Function mapping */
-    GpioAf_TIM10         =GpioAf_3,  /*  TIM10 Alternate Function mapping */
-    GpioAf_TIM11         =GpioAf_3,  /*  TIM11 Alternate Function mapping */
+	Af3           =0x03,
+	tim8          =Af3,  /*  TIM8 Alternate Function mapping */
+	tim9          =Af3,  /*  TIM9 Alternate Function mapping */
+	tim10         =Af3,  /*  TIM10 Alternate Function mapping */
+	tim11         =Af3,  /*  TIM11 Alternate Function mapping */
 
-    GpioAf_4             =0x04,
-    GpioAf_I2C1          =GpioAf_4,  /*  I2C1 Alternate Function mapping */
-    GpioAf_I2C2          =GpioAf_4,  /*  I2C2 Alternate Function mapping */
-    GpioAf_I2C3          =GpioAf_4,  /*  I2C3 Alternate Function mapping */
+	Af4           =0x04,
+	i2c1          =Af4,  /*  I2C1 Alternate Function mapping */
+	i2c2          =Af4,  /*  I2C2 Alternate Function mapping */
+	i2c3          =Af4,  /*  I2C3 Alternate Function mapping */
 
-    GpioAf_5             =0x05,
-    GpioAf_SPI1          =GpioAf_5,  /*  SPI1 Alternate Function mapping */
-    GpioAf_SPI2          =GpioAf_5,  /*  SPI2/I2S2 Alternate Function mapping */
-    GpioAf_I2S3ext       =GpioAf_5, /* I2S3ext_SD Alternate Function mapping  */
+	Af5           =0x05,
+	spi1          =Af5,  /*  SPI1 Alternate Function mapping */
+	spi2          =Af5,  /*  SPI2/I2S2 Alternate Function mapping */
+	i2s3ext       =Af5, /* I2S3ext_SD Alternate Function mapping  */
 
-    GpioAf_6             =0x06,
-    GpioAf_6_SPI3        =GpioAf_6,  /*  SPI3/I2S3 Alternate Function mapping */
-    GpioAf_I2S2ext       =GpioAf_6, /* I2S2ext_SD Alternate Function mapping */
+	Af6           =0x06,
+	spi3          =Af6,  /*  SPI3/I2S3 Alternate Function mapping */
+	i2s2ext       =Af6, /* I2S2ext_SD Alternate Function mapping */
 
-    GpioAf_7              =0x07,
-    GpioAf_USART1         =GpioAf_7,  /*  USART1 Alternate Function mapping */
-    GpioAf_USART2         =GpioAf_7,  /*  USART2 Alternate Function mapping */
-    GpioAf_USART3         =GpioAf_7,  /*  USART3 Alternate Function mapping */
+	Af7            =0x07,
+	usart1         =Af7,  /*  usart Alternate Function mapping */
+	usart2         =Af7,  /*  USART2 Alternate Function mapping */
+	usart3         =Af7,  /*  USART3 Alternate Function mapping */
 
-    GpioAf_8              =0x08,
-    GpioAf_UART4          =GpioAf_8,  /*  UART4 Alternate Function mapping */
-    GpioAf_UART5          =GpioAf_8,  /*  UART5 Alternate Function mapping */
-    GpioAf_USART6         =GpioAf_8,  /*  USART6 Alternate Function mapping */
+	Af8            =0x08,
+	uart4          =Af8,  /*  UART4 Alternate Function mapping */
+	uart5          =Af8,  /*  UART5 Alternate Function mapping */
+	uart6          =Af8,  /*  USART6 Alternate Function mapping */
 
-    GpioAf_9              =0x09,
-    GpioAf_CAN1           =GpioAf_9,  /*  CAN1 Alternate Function mapping */
-    GpioAf_CAN2           =GpioAf_9,  /*  CAN2 Alternate Function mapping */
-    GpioAf_TIM12          =GpioAf_9,  /*  TIM12 Alternate Function mapping */
-    GpioAf_TIM13          =GpioAf_9,  /*  TIM13 Alternate Function mapping */
-    GpioAf_TIM14          =GpioAf_9,  /*  TIM14 Alternate Function mapping */
+	Af9             =0x09,
+	can1           =Af9,  /*  CAN1 Alternate Function mapping */
+	can2           =Af9,  /*  CAN2 Alternate Function mapping */
+	tim12          =Af9,  /*  TIM12 Alternate Function mapping */
+	tim13          =Af9,  /*  TIM13 Alternate Function mapping */
+	tim14          =Af9,  /*  TIM14 Alternate Function mapping */
 
-    GpioAf_10             =0x0A,
-    GpioAf_OTG_FS         =GpioAf_10,  /*  OTG_FS Alternate Function mapping */
-    GpioAf_OTG_HS         =GpioAf_10,  /*  OTG_HS Alternate Function mapping */
+	Af10           =0x0A,
+	otgFs          =Af10,  /*  OTG_FS Alternate Function mapping */
+	otgHs          =Af10,  /*  OTG_HS Alternate Function mapping */
 
-    GpioAf_11             =0x0B,
-    GpioAf_ETH            =GpioAf_11,  /*  ETHERNET Alternate Function mapping */
+	Af11           =0x0B,
+	eth            =Af11,  /*  ETHERNET Alternate Function mapping */
 
-    GpioAf_12             =0x0C,
-    GpioAf_FSMC           =GpioAf_12,  /*  FSMC Alternate Function mapping */
-    GpioAf_OTG_HS_FS      =GpioAf_12,  /*  OTG HS configured in FS, Alternate Function mapping */
+	Af12           =0x0C,
+	fsmc 	       =Af12,  /*  FSMC Alternate Function mapping */
+	otgHsFs        =Af12,  /*  OTG HS configured in FS, Alternate Function mapping */
 
-    GpioAf_SDIO           =GpioAf_12,  /*  SDIO Alternate Function mapping */
-    GpioAf_13             =0x0D,
-    GpioAf_DCMI           =GpioAf_13,  /*  DCMI Alternate Function mapping */
+	sdio           =Af12,  /*  SDIO Alternate Function mapping */
+	Af13             =0x0D,
+	dcmi           =Af13,  /*  DCMI Alternate Function mapping */
 
-    GpioAf_15             =0x0F,
-    GpioAf_EVENTOUT       =GpioAf_15   /*  EVENTOUT Alternate Function mapping */
+	Af15            =0x0F,
+	eventout       =Af15   /*  EVENTOUT Alternate Function mapping */
 };
 
-
-
-
-
-//Пример использования
-//typedef Gpio<PortE,7,GpioMode_Out,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_NoPull> led1;
-//led1::Init;
-
-template<GpioPort_t port,
-		 uint8_t pin,
-		 GpioMode_t mode,
-		 GpioOutType_t GpioOutType,
-		 GpioSpeed_t GpioSpeed,
-		 GpioPuPd_t GpioPuPd>
+//Example
+//Gpio led1(Port::A,7);
+//led1.init(GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullDown);
+//led1.toggle();
+//constexpr Gpio led2(Port::A,7);  //параметры передаются на этапе компиляции
+//led2.init(GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullDown);
+//led2.toggle();
 
 class Gpio {
 public:
-	Gpio(){};
-	inline static void Init()
+	constexpr Gpio(Port port,uint8_t pin):mPort(getPortBase(port)),mPin(pin){};
+	 ~Gpio()=default;
+	inline  void init(
+			GpioMode mode,
+			GpioOutType GpioOutType,
+			GpioSpeed GpioSpeed,
+			GpioPuPd GpioPuPd)
+	{
+		RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN|RCC_AHB1ENR_GPIOBEN|RCC_AHB1ENR_GPIOCEN|RCC_AHB1ENR_GPIODEN|RCC_AHB1ENR_GPIOEEN;
+		if (isNotExti(mode)) mPort->MODER|=	 (uint8_t)mode<<mPin*2 ;
+		mPort->OSPEEDR|= (uint8_t)GpioSpeed<<mPin*2;
+		mPort->OTYPER|=  (uint8_t)GpioOutType<<mPin;
+		mPort->PUPDR|=   (uint8_t)GpioPuPd<<mPin*2;
+	}
+
+	inline  void seInit(){};
+	inline  void setAf(GpioAf af){
+		const uint32_t MskOft   = (uint32_t)(mPin & (uint32_t)0x07) * 4;
+		const uint32_t AfMask   = ~((uint32_t)0xf << MskOft) ;
+		const uint32_t AfValue  = ((uint32_t)(af) << MskOft);
+		const uint32_t AfrIdx   = mPin >> 3;
+
+		mPort->AFR[AfrIdx] &= AfMask;
+		mPort->AFR[AfrIdx] |= AfValue;
+	};
+
+	inline  void setState(bool state) const{state  ? setUp() : setDown()  ;  }
+	inline  void  setUp(void) const  {mPort->BSRR=1<<mPin;};
+	inline  void setDown(void)const{mPort->BSRR=1<<(mPin+16);}
+	inline  bool getState(void)const {return mPort->IDR&1<<mPin;};
+	inline  void toggle(void)const {setState(!getState());};
+
+private:
+ constexpr static 	GPIO_TypeDef* getPortBase(Port port)	{
+	switch (port)
+	{
+	case Port::A :
+		return GPIOA;
+		break;
+	case Port::B :
+		return GPIOB;
+		break;
+	case Port::C :
+		return GPIOC;
+		break;
+	case Port::D :
+		return GPIOD;
+		break;
+	case Port::E :
+		return GPIOE;
+		break;
+	case Port::F :
+		return GPIOF;
+		break;
+	}
+ };
+
+	inline  bool isNotExti(GpioMode mode) {return  !(mode==GpioMode::Exti);  };
+	GPIO_TypeDef* mPort;
+	uint16_t mPin;
+};
+
+
+
+//Example
+//typedef static_Gpio<Port::A,7,GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullDown> led1;
+//led1::init();
+//led1::toggle();
+
+template<Port port,
+uint8_t pin,
+GpioMode mode,
+GpioOutType GpioOutType,
+GpioSpeed GpioSpeed,
+GpioPuPd GpioPuPd>
+
+class static_Gpio {
+public:
+	static_Gpio(){};
+	inline static void init()
 	{
 		RCC->AHB1ENR|=RCC_AHB1ENR_GPIOAEN|RCC_AHB1ENR_GPIOBEN|RCC_AHB1ENR_GPIOCEN|RCC_AHB1ENR_GPIODEN|RCC_AHB1ENR_GPIOEEN;
 
-		if (IsNotExti()) GetPortBase()->MODER|=	 mode<<pin*2 ;
-		GetPortBase()->OSPEEDR|= GpioSpeed<<pin*2;
-		GetPortBase()->OTYPER|=  GpioOutType<<pin;
-		GetPortBase()->PUPDR|=   GpioPuPd<<pin*2;
+		if (isNotExti()) getPortBase()->MODER|=	 (uint8_t)mode<<pin*2 ;
+		getPortBase()->OSPEEDR|= (uint8_t)GpioSpeed<<pin*2;
+		getPortBase()->OTYPER|=  (uint8_t)GpioOutType<<pin;
+		getPortBase()->PUPDR|=   (uint8_t)GpioPuPd<<pin*2;
 
 	}
-	inline static void DeInit(){};
-	inline static void SetAf(GpioAf_t af){
+	inline static void deInit(){};
+	inline static void setAf(GpioAf af){
 
-        const uint32_t MskOft   = (uint32_t)(pin & (uint32_t)0x07) * 4;
-        const uint32_t AfMask   = ~((uint32_t)0xf << MskOft) ;
-        const uint32_t AfValue  = ((uint32_t)(af) << MskOft);
-        const uint32_t AfrIdx   = pin >> 3;
+		const uint32_t MskOft   = (uint32_t)(pin & (uint32_t)0x07) * 4;
+		const uint32_t AfMask   = ~((uint32_t)0xf << MskOft) ;
+		const uint32_t AfValue  = ((uint32_t)(af) << MskOft);
+		const uint32_t AfrIdx   = pin >> 3;
 
-        GetPortBase()->AFR[AfrIdx] &= AfMask;
-        GetPortBase()->AFR[AfrIdx] |= AfValue;
- };
+		getPortBase()->AFR[AfrIdx] &= AfMask;
+		getPortBase()->AFR[AfrIdx] |= AfValue;
+	};
 
-	inline static void SetState(bool state) {state  ? SetUp() : SetDown()  ;  }
-	inline static void SetUp(void) {GetPortBase()->BSRR=1<<pin;};
-	inline static void SetDown(void){GetPortBase()->BSRR=1<<(pin+16);}
-	inline static bool GetState(void) {return GetPortBase()->IDR&1<<pin;};
-	inline static void Toggle(void) {SetState(!GetState());};
-	virtual ~Gpio();
-	static constexpr GPIO_TypeDef* GetPortBase(void)	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(port))); };
-	static constexpr uint16_t GetPin(void) {return  pin;  };
-	static constexpr bool IsNotExti(void) {return  !(mode==GpioMode_Exti);  };
+	inline static void setState(bool state) {state  ? setUp() : setDown()  ;  }
+	inline static void setUp(void) {getPortBase()->BSRR=1<<pin;};
+	inline static void setDown(void){getPortBase()->BSRR=1<<(pin+16);}
+	inline static bool getState(void) {return getPortBase()->IDR&1<<pin;};
+	inline static void toggle(void) {setState(!getState());};
+	virtual ~static_Gpio();
+	static constexpr GPIO_TypeDef* getPortBase(void)	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*((uint8_t)port))); }; // port
+	static constexpr uint16_t getPin(void) {return  pin;  };
+	static constexpr bool isNotExti(void) {return  !(mode==GpioMode::Exti);  };
 private:
 
 };
