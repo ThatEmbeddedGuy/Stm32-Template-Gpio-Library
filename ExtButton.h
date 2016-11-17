@@ -1,7 +1,7 @@
 /*
- * ExtButton.h
+ * extButton.h
  *
- *  Created on: 27 θώνÿ 2016 γ.
+ *  Created on: 28 θώνÿ 2016 γ.
  *      Author: tihonov
  */
 
@@ -9,33 +9,19 @@
 #define EXTBUTTON_H_
 
 
-//------------------------------------------
-// Template class for External Buttons
-// use case
-//typedef ExtButton<PortA,4> Button1;
-//typedef ExtButton<PortA,5> Button2;
-//
-// bool Button1State,Button2State;
-//
-//Button1::Init();
-//Button2::Init();
-//
-//Button1State=Button1::GetState();
-//Button2State=Button2::GetState();
-//------------------------------------------
-
-
-#include "Gpio.h"
-
-template<GpioPort_t port, uint8_t pin>
+template<Port port, uint8_t pin>
 class ExtButton
 {
 
 public:
-	ExtButton();
-	static void Init() 	{mButton::Init();}
-	static bool GetState() {return mButton::GetState();};
+	ExtButton(){;	};
+	void init() 	{mButton::init();}
+	bool getState() {return mButton::getState();  };
+	void setSubscribtion(bool state)  {IsSubscribed=state;}
+	bool getsubscribtion(void) {return (IsSubscribed);}
 private:
-	typedef Gpio<port,pin,GpioMode_In,GpioOutType_PP,GpioSpeed_100MHz,GpioPuPd_PullUp> mButton;
+	typedef static_Gpio<port,pin,GpioMode::In,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullUp> mButton;
 };
+
+
 #endif /* EXTBUTTON_H_ */
