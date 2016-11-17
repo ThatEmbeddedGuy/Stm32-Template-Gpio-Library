@@ -54,16 +54,16 @@ enum ExtiLine_t {
 //typedef ExtiGpio<PortE,7,ExtiMode_Interrupt,ExtiTrigger_RisingFalling> Trigger1;
 //Trigger1::Init;
 
-template<GpioPort_t port, uint8_t pin, ExtiMode_t mode, ExtiTrigger_t Trigger>
+template<Port port, uint8_t pin, ExtiMode_t mode, ExtiTrigger_t Trigger>
 
-class ExtiGpio {
+class static_ExtiGpio {
 public:
-	ExtiGpio();
-	static void Init() {
+	static_ExtiGpio() {};
+	static void init() {
 		constexpr uint32_t line = 1 << pin;
 
 		RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
-		RCC->AHB1ENR = RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN
+		RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN
 				| RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN
 				| RCC_AHB1ENR_GPIOEEN;
 
@@ -72,15 +72,15 @@ public:
 		tmp = SYSCFG->EXTICR[pin >> 2];
 		tmp &= ~(((uint32_t)0x0F) << (4 * (pin & 0x03)));
 		tmp |= ((uint32_t)port << (4 * (pin & 0x03)));
-        SYSCFG->EXTICR[pin >> 2] = tmp;
+		SYSCFG->EXTICR[pin >> 2] = tmp;
 
 		//Снимаем все флаги
 		EXTI->IMR &= ~line;
 		EXTI->EMR &= ~line;
 
 		mode == ExtiMode_Interrupt ?
-		EXTI->IMR |= line :
-		EXTI->EMR |= line;
+				EXTI->IMR |= line :
+				EXTI->EMR |= line;
 
 		switch (Trigger) {
 		case ExtiTrigger_Rising:
@@ -95,31 +95,104 @@ public:
 			EXTI->RTSR |= line;
 			EXTI->FTSR |= line;
 			break;
-
-
 		}
 
 	}
 
-	static void ClearFlag()
+	static void clearFlag()
 	{
 		constexpr uint32_t line = 1 << pin;
 		EXTI->PR=line;
 	}
-	static void DeInit()
+	static void deInit()
 
 	{
 		constexpr uint32_t line = 1 << pin;
 		SYSCFG->EXTICR[pin >> 0x02] &= ~((uint32_t) 0x0F)
-				<< (0x04 * (pin & (uint8_t) 0x03));
+						<< (0x04 * (pin & (uint8_t) 0x03));
 
 		EXTI->IMR &= ~line;
 		EXTI->EMR &= ~line;
 	}
 	;
 
-	virtual ~ExtiGpio();
+	virtual ~static_ExtiGpio();
+private:
 
+};
+
+
+
+//ExtiGpio(PortE,7) Trigger2;
+//Trigger2.Init(ExtiMode_Interrupt,ExtiTrigger_RisingFalling);
+class ExtiGpio {
+public:
+	ExtiGpio(Port port, uint8_t pin):mPort(port),mPin(pin) {};
+	void init(ExtiMode_t mode, ExtiTrigger_t Trigger) {
+		uint32_t line = 1 << mPin;
+
+		RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+		RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN
+				| RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN
+				| RCC_AHB1ENR_GPIOEEN;
+
+		uint32_t tmp;
+
+		tmp = SYSCFG->EXTICR[mPin >> 2];
+		tmp &= ~(((uint32_t)0x0F) << (4 * (mPin & 0x03)));
+		tmp |= ((uint32_t)mPort << (4 * (mPin & 0x03)));
+		SYSCFG->EXTICR[mPin >> 2] = tmp;
+
+		//Снимаем все флаги
+		EXTI->IMR &= ~line;
+		EXTI->EMR &= ~line;
+
+		mode == ExtiMode_Interrupt ?
+				EXTI->IMR |= line :
+				EXTI->EMR |= line;
+
+		switch (Trigger) {
+		case ExtiTrigger_Rising:
+			EXTI->RTSR |= line;
+			break;
+
+		case ExtiTrigger_Falling:
+			EXTI->FTSR |= line;
+			break;
+
+		case ExtiTrigger_RisingFalling:
+			EXTI->RTSR |= line;
+			EXTI->FTSR |= line;
+			break;
+		}
+
+	}
+
+	void clearFlag()
+	{
+		uint32_t line = 1 << mPin;
+		EXTI->PR=line;
+	}
+
+	static void clearFlag(uint8_t mPin)
+	{
+		uint32_t line = 1 << mPin;
+		EXTI->PR=line;
+	}
+	void deInit()
+	{
+		uint32_t line = 1 << mPin;
+		SYSCFG->EXTICR[mPin >> 0x02] &= ~((uint32_t) 0x0F)
+						<< (0x04 * (mPin & (uint8_t) 0x03));
+
+		EXTI->IMR &= ~line;
+		EXTI->EMR &= ~line;
+	}
+	;
+
+private:
+	Port mPort;
+	uint8_t mPin;
 };
 
 #endif /* EXTI_EXTI_H_ */
