@@ -135,7 +135,7 @@ class Gpio {
 public:
 	constexpr Gpio(Port port,uint8_t pin):mPort(getPortBase(port)),mPin(pin){};
 	 ~Gpio()=default;
-	inline  void init(
+	inline  void init const(
 			GpioMode mode,
 			GpioOutType GpioOutType,
 			GpioSpeed GpioSpeed,
@@ -147,7 +147,7 @@ public:
 		mPort->OTYPER|=  (uint8_t)GpioOutType<<mPin;
 		mPort->PUPDR|=   (uint8_t)GpioPuPd<<mPin*2;
 	}
-	inline  void setAf(GpioAf af){
+	inline  void setAf(GpioAf af) const{
 		const uint32_t MskOft   = (uint32_t)(mPin & (uint32_t)0x07) * 4;
 		const uint32_t AfMask   = ~((uint32_t)0xf << MskOft) ;
 		const uint32_t AfValue  = ((uint32_t)(af) << MskOft);
@@ -158,13 +158,13 @@ public:
 	};
 
 	inline  void setState(bool state) const{state  ? setUp() : setDown()  ;  }
-	inline  void  setUp(void) const  {mPort->BSRR=1<<mPin;};
+	inline  void setUp(void) const  {mPort->BSRR=1<<mPin;};
 	inline  void setDown(void)const{mPort->BSRR=1<<(mPin+16);}
 	inline  bool getState(void)const {return mPort->IDR&1<<mPin;};
 	inline  void toggle(void)const {setState(!getState());};
 
 private:
- constexpr static 	GPIO_TypeDef* getPortBase(Port port)	{
+ constexpr static 	GPIO_TypeDef* getPortBase(Port port) const	{
 	switch (port)
 	{
 	case Port::A :
@@ -188,7 +188,7 @@ private:
 	}
  };
 
-	inline  bool isNotExti(GpioMode mode) {return  !(mode==GpioMode::Exti);  };
+	inline  bool isNotExti(GpioMode mode)const {return  !(mode==GpioMode::Exti);  };
 	GPIO_TypeDef* mPort;
 	uint16_t mPin;
 };
