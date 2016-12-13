@@ -174,6 +174,18 @@ public:
 		EXTI->PR=line;
 	}
 
+	bool checkFlag()
+	{
+	uint32_t line = 1 << mPin;
+	return (EXTI->PR & line);
+	}
+
+	static bool checkFlag(uint8_t mPin)
+	{
+	uint32_t line = 1 << mPin;
+	return (EXTI->PR & line);
+	}
+
 	static void clearFlag(uint8_t mPin)
 	{
 		uint32_t line = 1 << mPin;
