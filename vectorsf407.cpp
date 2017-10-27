@@ -1,7 +1,7 @@
-/*
+Ôªø/*
  * vectorsf407.cpp
  *
- *  Created on: 23 ‡‚„. 2016 „.
+ *  Created on: 23 –∞–≤–≥. 2016 –≥.
  *      Author: tihonov
  */
 

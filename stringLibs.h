@@ -1,7 +1,7 @@
-/*
+Ôªø/*
  * stringLibs.h
  *
- *  Created on: 10 ‡‚„. 2016 „.
+ *  Created on: 10 –∞–≤–≥. 2016 –≥.
  *      Author: tihonov
  */
 

@@ -1,7 +1,7 @@
-/*
+п»ї/*
  * interruptmanager.cpp
  *
- *  Created on: 23 нояб. 2015 г.
+ *  Created on: 23 РЅРѕСЏР±. 2015 Рі.
  *      Author: tihonov
  */
 #include "interruptmanager.h"

@@ -1,7 +1,7 @@
-/*
+п»ї/*
  * iwdg.h
  *
- *  Created on: 7 нояб. 2016 г.
+ *  Created on: 7 РЅРѕСЏР±. 2016 Рі.
  *      Author: tihonov
  */
 

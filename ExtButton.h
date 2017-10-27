@@ -1,7 +1,7 @@
-/*
+п»ї/*
  * extButton.h
  *
- *  Created on: 28 июня 2016 г.
+ *  Created on: 28 РёСЋРЅСЏ 2016 Рі.
  *      Author: tihonov
  */
 

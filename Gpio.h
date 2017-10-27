@@ -1,7 +1,7 @@
-/*
+п»ї/*
  * Gpio.h
  *
- *  Created on: 18 нояб. 2015 г.
+ *  Created on: 18 РЅРѕСЏР±. 2015 Рі.
  *      Author: tihonov
  */
 
@@ -127,7 +127,7 @@ enum class GpioAf
 //Gpio led1(Port::A,7);
 //led1.init(GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullDown);
 //led1.toggle();
-//constexpr Gpio led2(Port::A,7);  //параметры передаются на этапе компиляции
+//constexpr Gpio led2(Port::A,7);  //РїР°СЂР°РјРµС‚СЂС‹ РїРµСЂРµРґР°СЋС‚СЃСЏ РЅР° СЌС‚Р°РїРµ РєРѕРјРїРёР»СЏС†РёРё
 //led2.init(GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullDown);
 //led2.toggle();
 

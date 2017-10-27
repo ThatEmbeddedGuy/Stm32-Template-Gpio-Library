@@ -1,7 +1,7 @@
-/*
+Ôªø/*
  * freertosLibs.cpp
  *
- *  Created on: 18 ‡‚„. 2016 „.
+ *  Created on: 18 –∞–≤–≥. 2016 –≥.
  *      Author: tihonov
  */
 

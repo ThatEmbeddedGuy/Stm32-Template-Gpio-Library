@@ -1,7 +1,7 @@
-/*
+п»ї/*
  * exti.h
  *
- *  Created on: 25 нояб. 2015 г.
+ *  Created on: 25 РЅРѕСЏР±. 2015 Рі.
  *      Author: tihonov
  */
 
@@ -74,7 +74,7 @@ public:
 		tmp |= ((uint32_t)port << (4 * (pin & 0x03)));
 		SYSCFG->EXTICR[pin >> 2] = tmp;
 
-		//Снимаем все флаги
+		//РЎРЅРёРјР°РµРј РІСЃРµ С„Р»Р°РіРё
 		EXTI->IMR &= ~line;
 		EXTI->EMR &= ~line;
 
@@ -143,7 +143,7 @@ public:
 		tmp |= ((uint32_t)mPort << (4 * (mPin & 0x03)));
 		SYSCFG->EXTICR[mPin >> 2] = tmp;
 
-		//Снимаем все флаги
+		//РЎРЅРёРјР°РµРј РІСЃРµ С„Р»Р°РіРё
 		EXTI->IMR &= ~line;
 		EXTI->EMR &= ~line;
 
