@@ -220,9 +220,8 @@ public:
 		getPortBase()->PUPDR |= (uint8_t)GpioPuPd << pin * 2;
 
 	}
-	static void deInit(){};
-	static void setAf(GpioAf af){
-
+	static void setAf(GpioAf af)
+	{
 		const uint32_t MskOft = (uint32_t)(pin & (uint32_t)0x07) * 4;
 		const uint32_t AfMask = ~((uint32_t)0xf << MskOft);
 		const uint32_t AfValue = ((uint32_t)(af) << MskOft);
@@ -237,12 +236,11 @@ public:
 	static void setDown(){ getPortBase()->BSRR = 1 << (pin + 16); }
 	static bool getState() { return getPortBase()->IDR & 1 << pin; };
 	static void toggle() { setState(!getState()); };
-	virtual ~static_Gpio();
-	static constexpr GPIO_TypeDef* getPortBase()	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE)*((uint8_t)port))); }; // port
-	static constexpr uint16_t getPin() { return  pin; };
-	static constexpr bool isNotExti() { return  !(mode == GpioMode::Exti); };
-private:
 
+private:
+	static constexpr bool isNotExti() { return  !(mode == GpioMode::Exti); };
+	static constexpr GPIO_TypeDef* getPortBase()	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE)*((uint8_t)port))); };
+	static constexpr uint16_t getPin() { return  pin; };
 };
 
 
