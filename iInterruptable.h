@@ -18,7 +18,7 @@ class iInterruptable
 public:
 	iInterruptable(){};
 	virtual ~iInterruptable(){};
-	virtual void	interruptHandle(void){};
+	virtual void	interruptHandle(){};
 };
 
 //******************************************************************************************
@@ -38,8 +38,8 @@ private:
 	static std::array <iInterruptable* ,maxInterrupts> ArrayOfInterruptableClasses ;
 public:
 	InterruptSubject(){}
-	static	void interruptSubjectHandle(void);
-	static void init(void){SetVector(); };
+	static	void interruptSubjectHandle();
+	static void init(){SetVector(); };
 	static	void AttachInterrupt(iInterruptable * pInterrupt);
 	static	void DetatchInterrupt(iInterruptable * pInterrupt);
 
@@ -56,7 +56,7 @@ std::array<iInterruptable* ,maxInterrupts> InterruptSubject<irqN,maxInterrupts>:
 //Template definitions of public functions
 //******************************************************************************************
 template <IRQn_Type irqN,uint8_t maxInterrupts>
-void InterruptSubject<irqN,maxInterrupts>::interruptSubjectHandle(void)
+void InterruptSubject<irqN,maxInterrupts>::interruptSubjectHandle()
 {
 		for(size_t i = 0; i < ArrayOfInterruptableClasses.max_size(); i++){
 			if(ArrayOfInterruptableClasses[i]!=NULL)	ArrayOfInterruptableClasses[i]->interruptHandle();

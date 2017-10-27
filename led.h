@@ -18,8 +18,8 @@ public:
 	static void init() 	{mLed::init();}
 	static void setState(bool state) {mLed::setState(state);};
 	static void toggle(bool state)  {mLed::toggle();}
-	static void setUp(void) {mLed::setState(true);};
-	static void setDown(void) {mLed::setState(false);};
+	static void setUp() {mLed::setState(true);};
+	static void setDown() {mLed::setState(false);};
 private:
 	typedef static_Gpio<port,pin,GpioMode::Out,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullUp> mLed;
 

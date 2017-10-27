@@ -158,10 +158,10 @@ public:
 	};
 
 	inline  void setState(bool state) const{state  ? setUp() : setDown()  ;  }
-	inline  void setUp(void) const  {mPort->BSRR=1<<mPin;};
-	inline  void setDown(void)const{mPort->BSRR=1<<(mPin+16);}
-	inline  bool getState(void)const {return mPort->IDR&1<<mPin;};
-	inline  void toggle(void)const {setState(!getState());};
+	inline  void setUp() const  {mPort->BSRR=1<<mPin;};
+	inline  void setDown()const{mPort->BSRR=1<<(mPin+16);}
+	inline  bool getState()const {return mPort->IDR&1<<mPin;};
+	inline  void toggle()const {setState(!getState());};
 
 private:
  constexpr static 	GPIO_TypeDef* getPortBase(Port port) const	{
@@ -233,14 +233,14 @@ public:
 	};
 
 	inline static void setState(bool state) {state  ? setUp() : setDown()  ;  }
-	inline static void setUp(void) {getPortBase()->BSRR=1<<pin;};
-	inline static void setDown(void){getPortBase()->BSRR=1<<(pin+16);}
-	inline static bool getState(void) {return getPortBase()->IDR&1<<pin;};
-	inline static void toggle(void) {setState(!getState());};
+	inline static void setUp() {getPortBase()->BSRR=1<<pin;};
+	inline static void setDown(){getPortBase()->BSRR=1<<(pin+16);}
+	inline static bool getState() {return getPortBase()->IDR&1<<pin;};
+	inline static void toggle() {setState(!getState());};
 	virtual ~static_Gpio();
-	static constexpr GPIO_TypeDef* getPortBase(void)	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*((uint8_t)port))); }; // port
-	static constexpr uint16_t getPin(void) {return  pin;  };
-	static constexpr bool isNotExti(void) {return  !(mode==GpioMode::Exti);  };
+	static constexpr GPIO_TypeDef* getPortBase()	{ return ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*((uint8_t)port))); }; // port
+	static constexpr uint16_t getPin() {return  pin;  };
+	static constexpr bool isNotExti() {return  !(mode==GpioMode::Exti);  };
 private:
 
 };

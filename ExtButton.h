@@ -18,7 +18,7 @@ public:
 	void init() 	{mButton::init();}
 	bool getState() {return mButton::getState();  };
 	void setSubscribtion(bool state)  {IsSubscribed=state;}
-	bool getsubscribtion(void) {return (IsSubscribed);}
+	bool getsubscribtion() {return (IsSubscribed);}
 private:
 	typedef static_Gpio<port,pin,GpioMode::In,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullUp> mButton;
 };

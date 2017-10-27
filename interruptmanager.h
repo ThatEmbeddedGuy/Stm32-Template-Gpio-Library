@@ -76,7 +76,7 @@ class InterruptManagerSram {
 private:
 	static  pHandlerPointer_t  volatile *vectors;
 public:
-	static void init(void)
+	static void init()
 	{
 		__disable_irq();
 		memcpy((void*)sramVectorsTable, (void*)SCB->VTOR, sizeof(sramVectorsTable));
@@ -85,7 +85,7 @@ public:
 		__enable_irq();
 		__ISB();
 	};
-	static void defaultHandler(void) {
+	static void defaultHandler() {
 		asm volatile("nop"::);
 	};
 
@@ -115,8 +115,8 @@ class InterruptManagerFlash {
 private:
 	static pHandlerPointer_t volatile vectors[VECTORTABLE_SIZE];
 public:
-	static void init(void)	{	}
-	static void defaultHandler(void) {
+	static void init()	{	}
+	static void defaultHandler() {
 		asm volatile("nop"::);
 	};
 

@@ -69,13 +69,13 @@ public:
 	//******************************************************************************************
 	PulseGenerator(bool Polarity):polarity(Polarity){}
 	PulseGenerator():polarity(0){}
-	void init(void);
+	void init();
 	bool tryGeneratePulse(GPIO_TypeDef *Port,uint16_t  Pin, int32_t widthMs);
 	void generatePulseAsync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void generatePulseSync(GPIO_TypeDef *Port,uint16_t  Pin,uint32_t widthMs);
 	void setSysFreq(uint32_t sysFreq){freq=sysFreq;}
 	void setPolarity(bool pol){polarity=pol;}
-	volatile static  void irqHandler(void);
+	volatile static  void irqHandler();
 	virtual ~PulseGenerator(){};
 private:
 	//******************************************************************************************
@@ -91,14 +91,14 @@ private:
 	//******************************************************************************************
 	//Private functions
 	//******************************************************************************************
-	static inline  void setPinUp(void) {currentPort->BSRR=1<<currentPin;};
-	static inline  void setPinDown(void){currentPort->BSRR=1<<(currentPin+16);}
+	static inline  void setPinUp() {currentPort->BSRR=1<<currentPin;};
+	static inline  void setPinDown(){currentPort->BSRR=1<<(currentPin+16);}
 	static inline  void setPinState(bool state) {state  ? setPinUp() : setPinDown(); }
-	static void initInterrupt(void);
-	static void initTimer(void);
-	void enableTimer(void);
-	static void timCLockEnable(void) ;
-	static constexpr TIM_TypeDef * getTimBase(void);
+	static void initInterrupt();
+	static void initTimer();
+	void enableTimer();
+	static void timCLockEnable() ;
+	static constexpr TIM_TypeDef * getTimBase();
 };
 
 //******************************************************************************************
