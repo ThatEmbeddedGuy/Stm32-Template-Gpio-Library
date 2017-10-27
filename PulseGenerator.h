@@ -91,9 +91,9 @@ private:
 	//******************************************************************************************
 	//Private functions
 	//******************************************************************************************
-	static inline  void setPinUp() {currentPort->BSRR=1<<currentPin;};
-	static inline  void setPinDown(){currentPort->BSRR=1<<(currentPin+16);}
-	static inline  void setPinState(bool state) {state  ? setPinUp() : setPinDown(); }
+	static void setPinUp() {currentPort->BSRR=1<<currentPin;};
+	static void setPinDown(){currentPort->BSRR=1<<(currentPin+16);}
+	static void setPinState(bool state) {state  ? setPinUp() : setPinDown(); }
 	static void initInterrupt();
 	static void initTimer();
 	void enableTimer();

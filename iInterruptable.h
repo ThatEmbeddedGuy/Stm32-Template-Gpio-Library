@@ -23,7 +23,7 @@ public:
 
 //******************************************************************************************
 //Static template class of interrupt
-// uase case
+//use case
 //InterruptSubject<TIM4_IRQn,6> timIrqSubject;
 //timIrqSubject.init();
 //DebugString debugstring1("debug1"); // class extends interface iInterruptable
