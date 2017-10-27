@@ -8,6 +8,7 @@
 #ifndef STRINGLIBS_H_
 #define STRINGLIBS_H_
 
+#include <algorithm>
 #include <string>
 #include <string.h>
 #include <sstream>
@@ -47,10 +48,7 @@ void* toptr=&to;
 		memcpy(toptr,fromptr,size);
 	if (order==SerializeOrder::backward)
 	{
-		for (size_t i=0; i<size;i++)
-		{
-			memcpy(toptr+i,fromptr+size-1-i,1);
-		}
+		std::reverse_copy(toptr, toptr + size, fromptr);
 	}
 }
 
