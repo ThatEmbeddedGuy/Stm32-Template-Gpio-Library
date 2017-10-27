@@ -209,7 +209,7 @@ template<Port port,
 
 class static_Gpio {
 public:
-	static_Gpio(){};
+	static_Gpio() = default;
 	static void init()
 	{
 		RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN | RCC_AHB1ENR_GPIODEN | RCC_AHB1ENR_GPIOEEN;
