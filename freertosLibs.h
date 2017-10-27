@@ -18,11 +18,11 @@
 class iTask
 {
 public:
-	virtual void run(void* pvParameters)=0;
+	virtual void run(void* pvParameters) = 0;
 	virtual ~iTask(){};
 };
 
-void attach(iTask *task,  char *title,uint16_t stack);
+void attach(iTask *task, char *title, uint16_t stack);
 
 
 

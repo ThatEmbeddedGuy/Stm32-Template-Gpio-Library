@@ -19,34 +19,34 @@ template<typename T>
 std::string toString(const T& value)
 {
 
-	    std::ostringstream s;
-	    s <<  value;
-	    return s.str();
+	std::ostringstream s;
+	s << value;
+	return s.str();
 }
 
 inline std::string toString(const uint8_t& value)
 {
-	    std::ostringstream s;
-	    s << (int) value;
-	    return s.str();
+	std::ostringstream s;
+	s << (int)value;
+	return s.str();
 }
 
 
 enum class SerializeOrder
 {
-forward,
-backward
+	forward,
+	backward
 };
 
 
-template  <typename A,typename B>
-void serialize(const A&  from, B& to, size_t size=sizeof(A), const SerializeOrder order=SerializeOrder::forward)
+template  <typename A, typename B>
+void serialize(const A&  from, B& to, size_t size = sizeof(A), const SerializeOrder order = SerializeOrder::forward)
 {
-const void* fromptr=&from;
-void* toptr=&to;
-	if (order==SerializeOrder::forward)
-		memcpy(toptr,fromptr,size);
-	if (order==SerializeOrder::backward)
+	const void* fromptr = &from;
+	void* toptr = &to;
+	if (order == SerializeOrder::forward)
+		memcpy(toptr, fromptr, size);
+	if (order == SerializeOrder::backward)
 	{
 		std::reverse_copy(toptr, toptr + size, fromptr);
 	}

@@ -14,13 +14,13 @@ class ExtButton
 {
 
 public:
-	ExtButton(){;	};
-	void init() 	{mButton::init();}
-	bool getState() {return mButton::getState();  };
-	void setSubscribtion(bool state)  {IsSubscribed=state;}
-	bool getsubscribtion() {return (IsSubscribed);}
+	ExtButton(){ ; };
+	void init() 	{ mButton::init(); }
+	bool getState() { return mButton::getState(); };
+	void setSubscribtion(bool state)  { IsSubscribed = state; }
+	bool getsubscribtion() { return (IsSubscribed); }
 private:
-	typedef static_Gpio<port,pin,GpioMode::In,GpioOutType::PP,GpioSpeed::s100MHz,GpioPuPd::PullUp> mButton;
+	typedef static_Gpio<port, pin, GpioMode::In, GpioOutType::PP, GpioSpeed::s100MHz, GpioPuPd::PullUp> mButton;
 };
 
 

@@ -58,7 +58,7 @@
 //******************************************************************************************
 //Function pointer
 //******************************************************************************************
-typedef void (*pHandlerPointer_t)();
+typedef void(*pHandlerPointer_t)();
 
 //******************************************************************************************
 //Sram interrupt manager
@@ -80,8 +80,8 @@ public:
 	{
 		__disable_irq();
 		memcpy((void*)sramVectorsTable, (void*)SCB->VTOR, sizeof(sramVectorsTable));
-		SCB->VTOR=(uint32_t)sramVectorsTable;
-		__DSB ();
+		SCB->VTOR = (uint32_t)sramVectorsTable;
+		__DSB();
 		__enable_irq();
 		__ISB();
 	};

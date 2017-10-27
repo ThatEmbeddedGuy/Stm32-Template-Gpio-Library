@@ -12,8 +12,8 @@
 //Sram interrupt manager
 //******************************************************************************************
 #if INTERRUPTMANAGER_ENABLED==INTERRUPTMANAGER_SRAM
-pHandlerPointer_t volatile sramVectorsTable[VECTORTABLE_SIZE]  __attribute__ ((aligned(256)));;
-pHandlerPointer_t  volatile *InterruptManagerSram::vectors=(pHandlerPointer_t volatile*)VECTORTABLE__FIRST_SPEC_IRQ_ALIGNMENT;
+pHandlerPointer_t volatile sramVectorsTable[VECTORTABLE_SIZE]  __attribute__((aligned(256)));;
+pHandlerPointer_t  volatile *InterruptManagerSram::vectors = (pHandlerPointer_t volatile*)VECTORTABLE__FIRST_SPEC_IRQ_ALIGNMENT;
 #endif
 
 //******************************************************************************************

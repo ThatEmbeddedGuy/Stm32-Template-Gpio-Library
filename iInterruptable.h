@@ -31,15 +31,15 @@ public:
 //timIrqSubject.AttachInterrupt(&debugstring1);
 //timIrqSubject.AttachInterrupt(&debugstring2);
 //******************************************************************************************
-template <IRQn_Type irqN,uint8_t maxInterrupts>
+template <IRQn_Type irqN, uint8_t maxInterrupts>
 class InterruptSubject{
 private:
-	static	void SetVector(){INTERRUPTMANAGER::addHandler(interruptSubjectHandle,irqN);};
-	static std::array <iInterruptable* ,maxInterrupts> ArrayOfInterruptableClasses ;
+	static	void SetVector(){ INTERRUPTMANAGER::addHandler(interruptSubjectHandle, irqN); };
+	static std::array <iInterruptable*, maxInterrupts> ArrayOfInterruptableClasses;
 public:
 	InterruptSubject(){}
 	static	void interruptSubjectHandle();
-	static void init(){SetVector(); };
+	static void init(){ SetVector(); };
 	static	void AttachInterrupt(iInterruptable * pInterrupt);
 	static	void DetatchInterrupt(iInterruptable * pInterrupt);
 
@@ -48,52 +48,52 @@ public:
 //******************************************************************************************
 //Template definitions of static variables
 //******************************************************************************************
-template <IRQn_Type irqN,uint8_t maxInterrupts>
-std::array<iInterruptable* ,maxInterrupts> InterruptSubject<irqN,maxInterrupts>::ArrayOfInterruptableClasses={NULL};
+template <IRQn_Type irqN, uint8_t maxInterrupts>
+std::array<iInterruptable*, maxInterrupts> InterruptSubject<irqN, maxInterrupts>::ArrayOfInterruptableClasses = { NULL };
 
 
 //******************************************************************************************
 //Template definitions of public functions
 //******************************************************************************************
-template <IRQn_Type irqN,uint8_t maxInterrupts>
-void InterruptSubject<irqN,maxInterrupts>::interruptSubjectHandle()
+template <IRQn_Type irqN, uint8_t maxInterrupts>
+void InterruptSubject<irqN, maxInterrupts>::interruptSubjectHandle()
 {
-		for(size_t i = 0; i < ArrayOfInterruptableClasses.max_size(); i++){
-			if(ArrayOfInterruptableClasses[i]!=NULL)	ArrayOfInterruptableClasses[i]->interruptHandle();
-		};
+	for (size_t i = 0; i < ArrayOfInterruptableClasses.max_size(); i++){
+		if (ArrayOfInterruptableClasses[i] != NULL)	ArrayOfInterruptableClasses[i]->interruptHandle();
+	};
 }
 
-template <IRQn_Type irqN,uint8_t maxInterrupts>
-void InterruptSubject<irqN,maxInterrupts>::AttachInterrupt(iInterruptable * pInterrupt)
+template <IRQn_Type irqN, uint8_t maxInterrupts>
+void InterruptSubject<irqN, maxInterrupts>::AttachInterrupt(iInterruptable * pInterrupt)
 {
-	uint8_t i=0;
-	bool attached=false;
+	uint8_t i = 0;
+	bool attached = false;
 	while (!attached)
 	{
-		if (ArrayOfInterruptableClasses[i]==NULL)
+		if (ArrayOfInterruptableClasses[i] == NULL)
 		{
-			ArrayOfInterruptableClasses[i]=pInterrupt;
-			attached=true;
+			ArrayOfInterruptableClasses[i] = pInterrupt;
+			attached = true;
 		}
 		i++;
-		if (i==ArrayOfInterruptableClasses.max_size()) attached=true;
+		if (i == ArrayOfInterruptableClasses.max_size()) attached = true;
 	}
 }
 
-template <IRQn_Type irqN,uint8_t maxInterrupts>
-void InterruptSubject<irqN,maxInterrupts>::DetatchInterrupt(iInterruptable * pInterrupt)
+template <IRQn_Type irqN, uint8_t maxInterrupts>
+void InterruptSubject<irqN, maxInterrupts>::DetatchInterrupt(iInterruptable * pInterrupt)
 {
-	uint8_t i=0;
-	bool detached=false;
+	uint8_t i = 0;
+	bool detached = false;
 	while (!detached)
 	{
-		if (ArrayOfInterruptableClasses[i]==pInterrupt)
+		if (ArrayOfInterruptableClasses[i] == pInterrupt)
 		{
-			ArrayOfInterruptableClasses[i]=NULL;
-			detached=true;
+			ArrayOfInterruptableClasses[i] = NULL;
+			detached = true;
 		}
 		i++;
-		if (i==ArrayOfInterruptableClasses.max_size()) detached=true;
+		if (i == ArrayOfInterruptableClasses.max_size()) detached = true;
 	}
 }
 
